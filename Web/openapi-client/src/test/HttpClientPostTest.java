@@ -1,0 +1,86 @@
+package test;
+
+//import gov.keis.template.rest.sample.vo.RestSampleInfoVO;
+//import gov.keis.template.rest.sample.vo.RestSampleVO;
+
+//import java.util.HashMap;
+//import java.util.List;
+//import java.util.Map;
+
+//import javax.xml.bind.JAXBContext;
+//import javax.xml.bind.Marshaller;
+//import javax.xml.transform.Source;
+
+
+
+
+//import java.io.StringReader;
+//import java.io.StringWriter;
+
+//import javax.xml.bind.JAXBContext;
+//import javax.xml.bind.Marshaller;
+//import javax.xml.bind.Unmarshaller;
+//import javax.xml.transform.Source;
+//import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.methods.*;
+
+/**
+ * 서버를 띄우고 테스트한다.
+ * @author AAA
+ *
+ */
+
+public class HttpClientPostTest {
+
+	  //private static String url = "http://localhost:7001/opi/opi/opia/wantedApi.do?returnType=xml&startPage=1&display=10&callTp=L&authKey=WNGXVGIDR0JK75CY4TFRV2VRETJ";
+	  private static String url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do";  
+	
+	  public static void main(String[] args) {
+		  System.out.println("************** Start *********************");
+		  String rtnXml="";
+		  byte []responseBody = null;
+		  HttpClient client = new HttpClient();
+//          client.setConnectionTimeout(10000); // 10 Seconds Connection Time-Out
+//          client.setTimeout(300000); 			// 10 Seconds Request Time-Out
+          
+		  PostMethod method = new PostMethod(url);
+		  //필수입력항목 및 검색조건 setting
+		  method.addParameter("returnType", "xml");
+		  method.addParameter("startPage", "1");
+		  method.addParameter("display", "10");
+		  method.addParameter("callTp", "L");
+		  method.addParameter("authKey", "WNGYMHQJN3JJJDMXK85502VR1HJ");
+		  
+		  method.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=utf-8");
+		  
+		  try {
+			  int responseCode = client.executeMethod(method);
+			  System.out.println("responseCode -->"+responseCode);
+
+			  if (responseCode != HttpStatus.SC_OK) {
+			   
+			  } else {
+				  // 내용이 길어지면 method.getResponseBodyAsStream()을 이용하여 InputStream 객체를 직접 핸들링 하는게 낫다.
+				  responseBody = method.getResponseBody();
+		    
+				  System.out.println("print 1 : "+new String(responseBody));
+				  //iso 8859로 리턴 되기 때문에 한번 변환해 준다.
+				  rtnXml=new String(responseBody,"UTF-8");
+				  System.out.println("print 2 : "+rtnXml);
+
+			  }
+		  } catch (Exception e) {
+			  
+		  }finally{
+			  // 혹시 모르니 releaseConnection 해주자.
+			  if(method != null) method.releaseConnection(); 
+		  }
+	      
+		 
+}
+		  
+		  
+		  
+}
